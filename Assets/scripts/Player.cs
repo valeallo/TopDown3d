@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
 {
     public GameObject marker;
     private Vector3 camera_offset;
+    private float move_speed = 10f;
+    public GameObject projectile;
     // Start is called before the first frame update
     void Start()
     {
@@ -53,8 +55,26 @@ public class Player : MonoBehaviour
             look_direction.x = -1;
         }
 
-        look_direction.y = transform.position.y;
+        //look_direction.y = transform.position.y;
         transform.rotation = Quaternion.LookRotation(look_direction, Vector3.up);
+
+        if (Input.GetAxis("Vertical") != 0)
+        {
+            transform.Translate(Vector3.forward* Input.GetAxis("Vertical") * Time.deltaTime * move_speed, Space.World);
+        }
+        if (Input.GetAxis("Horizontal") != 0)
+        {
+            transform.Translate(Vector3.right * Input.GetAxis("Horizontal") * Time.deltaTime * move_speed, Space.World);
+        }
+
+
+
+        if (Input.GetKey(KeyCode.Space))
+        {
+            GameObject p = Instantiate(projectile, transform.position, transform.rotation);
+            p.GetComponent<Rigidbody>().AddForce(transform.forward * 2000f);
+        
+        }
     }
 
     private void FixedUpdate()
