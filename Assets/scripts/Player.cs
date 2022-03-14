@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
     private Vector3 camera_offset;
     private float move_speed = 10f;
     public GameObject projectile;
+    public Crop held_crop;
+  
     // Start is called before the first frame update
     void Start()
     {
@@ -75,13 +77,11 @@ public class Player : MonoBehaviour
             p.GetComponent<Rigidbody>().AddForce(transform.forward * 2000f);
         
         }
-    }
 
-    private void FixedUpdate()
-    {
-        if (Input.GetAxis("Mouse ScrollWheel") > 0 ) 
+
+        if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {
-            if (camera_offset.y > 3) 
+            if (camera_offset.y > 3)
             {
                 camera_offset.y -= Input.GetAxis("Mouse ScrollWheel");
             }
@@ -95,5 +95,18 @@ public class Player : MonoBehaviour
             }
         }
         Camera.main.transform.position = transform.position + camera_offset;
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (collision.gameObject.GetComponent<Planter>() != null ) 
+            {
+                Debug.Log("planted");
+                collision.gameObject.GetComponent<Planter>().PlantCrop(held_crop);
+            }
+            
+        }
     }
 }
