@@ -8,13 +8,15 @@ public class Player : MonoBehaviour
     public GameObject marker;
     private Vector3 camera_offset;
     private float move_speed = 10f;
-    public GameObject projectile;
+
     public Crop held_crop;
+    private Inventory inventory; 
   
     // Start is called before the first frame update
     void Start()
     {
         camera_offset = Camera.main.transform.position - transform.position;
+        inventory.crop_list = ServiceLocator.GetGameManager().all_crops;
     }
 
     // Update is called once per frame
@@ -69,16 +71,6 @@ public class Player : MonoBehaviour
             transform.Translate(Vector3.right * Input.GetAxis("Horizontal") * Time.deltaTime * move_speed, Space.World);
         }
 
-
-
-        if (Input.GetKey(KeyCode.Space))
-        {
-            GameObject p = Instantiate(projectile, transform.position, transform.rotation);
-            p.GetComponent<Rigidbody>().AddForce(transform.forward * 2000f);
-        
-        }
-
-
         if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {
             if (camera_offset.y > 3)
@@ -95,11 +87,22 @@ public class Player : MonoBehaviour
             }
         }
         Camera.main.transform.position = transform.position + camera_offset;
+
+        if (Input.GetKey(KeyCode.Q)) 
+        {
+            int crop_id = inventory.selected_crop - 1;
+            if (crop_id < 0) 
+            {
+                crop_id = inventory.crop_list.Count - 1;
+            }
+            inventory.selected_crop = crop_id;
+            held_crop = inventory.crop_list[crop_id];
+        }
     }
 
     private void OnCollisionStay(Collision collision)
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             if (collision.gameObject.GetComponent<Planter>() != null ) 
             {

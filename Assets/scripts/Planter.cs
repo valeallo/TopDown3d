@@ -10,8 +10,8 @@ public class Planter : MonoBehaviour
     {
         if (planted_crop == null)
         {
-            Instantiate(crop, transform.position, transform.rotation);
-            planted_crop = crop;
+            planted_crop = Instantiate(crop, transform.position, transform.rotation);
+      
         }
 
     }
