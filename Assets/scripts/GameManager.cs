@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
 {
     public List<Crop> all_crops = new List<Crop>();
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         ServiceLocator.SetGameManager(this); 
     }

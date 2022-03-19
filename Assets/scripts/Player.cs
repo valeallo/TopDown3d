@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -10,13 +11,24 @@ public class Player : MonoBehaviour
     private float move_speed = 10f;
 
     public Crop held_crop;
-    private Inventory inventory; 
+    private Inventory inventory = new Inventory();
+    public Image[] item_slots = new Image[8];
+
   
     // Start is called before the first frame update
     void Start()
     {
         camera_offset = Camera.main.transform.position - transform.position;
         inventory.crop_list = ServiceLocator.GetGameManager().all_crops;
+        inventory.inventory_panel[0] = inventory.crop_list[0];
+    }
+
+    private void UpdateUI() 
+    {
+        for (int i = 0; i < 8; i++) 
+        {
+            item_slots[i].sprite = inventory.inventory_panel[i].sprite;
+        }
     }
 
     // Update is called once per frame
@@ -97,9 +109,18 @@ public class Player : MonoBehaviour
             }
             inventory.selected_crop = crop_id;
             held_crop = inventory.crop_list[crop_id];
+            ChangeSelection();
         }
     }
 
+    private void ChangeSelection() 
+    {
+        foreach (var item in item_slots) 
+        {
+            item.GetComponentInParent<Image>().color = Color.white;
+        }
+        item_slots[inventory.selected_crop].GetComponentInParent<Image>().color = Color.yellow;    
+    }
     private void OnCollisionStay(Collision collision)
     {
         if (Input.GetKeyDown(KeyCode.Space))

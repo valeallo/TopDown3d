@@ -6,6 +6,7 @@ public class Crop : MonoBehaviour
 {
     public List<GameObject> growthStages = new List<GameObject>();
     private int growth_stage_number = 0;
+    public Sprite sprite;
     public void Grow()
     {
         growth_stage_number++;
