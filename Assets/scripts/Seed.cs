@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class Seed : MonoBehaviour
 {
-    public List<Seed> all_seeds = new List<Seed>();
+    public Crop crop;
     // Start is called before the first frame update
-    void Awake()
+    void Start()
     {
-        ServiceLocator.SetGameManager(this); 
+        
     }
 
     // Update is called once per frame

@@ -10,24 +10,32 @@ public class Player : MonoBehaviour
     private Vector3 camera_offset;
     private float move_speed = 10f;
 
-    public Crop held_crop;
+    public Seed held_seed;
     private Inventory inventory = new Inventory();
     public Image[] item_slots = new Image[8];
+    public Image[] item_slots_background = new Image[8];
 
   
     // Start is called before the first frame update
     void Start()
     {
         camera_offset = Camera.main.transform.position - transform.position;
-        inventory.crop_list = ServiceLocator.GetGameManager().all_crops;
-        inventory.inventory_panel[0] = inventory.crop_list[0];
+        inventory.seed_list = ServiceLocator.GetGameManager().all_seeds;
+        for (int i = 0; i < 8 && i < inventory.seed_list.Count; i++)
+        {
+            inventory.inventory_panel[i] = inventory.seed_list[i];
+        }
+        UpdateUI();
     }
 
     private void UpdateUI() 
     {
         for (int i = 0; i < 8; i++) 
         {
-            item_slots[i].sprite = inventory.inventory_panel[i].sprite;
+            if (inventory.inventory_panel[i] != null)
+            {
+                item_slots[i].sprite = inventory.inventory_panel[i].crop.sprite;
+            }
         }
     }
 
@@ -100,26 +108,26 @@ public class Player : MonoBehaviour
         }
         Camera.main.transform.position = transform.position + camera_offset;
 
-        if (Input.GetKey(KeyCode.Q)) 
+        if (Input.GetKeyDown(KeyCode.Q)) 
         {
             int crop_id = inventory.selected_crop - 1;
             if (crop_id < 0) 
             {
-                crop_id = inventory.crop_list.Count - 1;
+                crop_id = inventory.seed_list.Count - 1;
             }
             inventory.selected_crop = crop_id;
-            held_crop = inventory.crop_list[crop_id];
+            held_seed = inventory.seed_list[crop_id];
             ChangeSelection();
         }
     }
 
     private void ChangeSelection() 
     {
-        foreach (var item in item_slots) 
+        foreach (var item in item_slots_background) 
         {
-            item.GetComponentInParent<Image>().color = Color.white;
+            item.GetComponent<Image>().color = Color.white;
         }
-        item_slots[inventory.selected_crop].GetComponentInParent<Image>().color = Color.yellow;    
+        item_slots_background[inventory.selected_crop].GetComponent<Image>().color = Color.yellow;    
     }
     private void OnCollisionStay(Collision collision)
     {
@@ -127,8 +135,7 @@ public class Player : MonoBehaviour
         {
             if (collision.gameObject.GetComponent<Planter>() != null ) 
             {
-                Debug.Log("planted");
-                collision.gameObject.GetComponent<Planter>().PlantCrop(held_crop);
+                collision.gameObject.GetComponent<Planter>().PlantCrop(held_seed.crop);
             }
             
         }

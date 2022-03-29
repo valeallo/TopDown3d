@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Inventory
 {
-    public List<Crop> crop_list;
+    public List<Seed> seed_list;
     public int selected_crop;
-    public Crop[] inventory_panel;
+    public Seed[] inventory_panel;
 
     public Inventory() 
     {
-        crop_list = new List<Crop>();
-        inventory_panel = new Crop[8];
+        seed_list = new List<Seed>();
+        inventory_panel = new Seed[8];
         selected_crop = 0;
     }
 }
