@@ -108,13 +108,78 @@ public class Player : MonoBehaviour
         }
         Camera.main.transform.position = transform.position + camera_offset;
 
+
+        bool select_item = false;
+        int crop_id = 0;
+        if (inventory.seed_list.Count == 0) 
+        {
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.Q)) 
         {
-            int crop_id = inventory.selected_crop - 1;
+            select_item = true; 
+            crop_id = inventory.selected_crop - 1;
             if (crop_id < 0) 
             {
-                crop_id = inventory.seed_list.Count - 1;
+                crop_id = Mathf.Min(inventory.seed_list.Count - 1, 7);
             }
+      
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            select_item = true;
+            crop_id = inventory.selected_crop + 1;
+            if (crop_id > inventory.seed_list.Count - 1 || crop_id > 7)
+            {
+                crop_id = 0;
+            }
+            
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1)) 
+        {
+            crop_id = 0;
+            if (inventory.seed_list.Count >= crop_id +1 && inventory.seed_list[crop_id] != null) 
+            {
+                select_item = true;
+            }
+        
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            crop_id = 1;
+            if (inventory.seed_list.Count >= crop_id + 1 && inventory.seed_list[crop_id] != null)
+            {
+                select_item = true;
+            }
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            crop_id = 2;
+            if (inventory.seed_list.Count >= crop_id + 1 && inventory.seed_list[crop_id] != null)
+            {
+                select_item = true;
+            }
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            crop_id = 3;
+            if (inventory.seed_list.Count >= crop_id + 1 && inventory.seed_list[crop_id] != null)
+            {
+                select_item = true;
+            }
+
+        }
+
+        if (select_item) 
+        {
             inventory.selected_crop = crop_id;
             held_seed = inventory.seed_list[crop_id];
             ChangeSelection();
@@ -133,11 +198,19 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (collision.gameObject.GetComponent<Planter>() != null ) 
+            Planter p = collision.gameObject.GetComponent<Planter>();
+            if ( p != null ) 
             {
-                collision.gameObject.GetComponent<Planter>().PlantCrop(held_seed.crop);
-            }
-            
+                if (p.HarvestCrop())
+                {
+                    inventory.money += 10;
+                }
+                else
+                {
+                    p.PlantCrop(held_seed.crop);
+                }
+            } 
         }
+
     }
 }

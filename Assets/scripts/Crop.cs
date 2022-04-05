@@ -29,4 +29,9 @@ public class Crop : MonoBehaviour
     {
         
     }
+
+    public bool CheckHarvestability() 
+    {
+        return growth_stage_number >= growthStages.Count - 1;
+    }
 }

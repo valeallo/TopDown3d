@@ -36,4 +36,21 @@ public class Planter : MonoBehaviour
         planted_crop.Grow();
     
     }
+
+    public bool HarvestCrop() 
+    {
+        if (planted_crop != null)
+        {
+            bool harvestable = planted_crop.CheckHarvestability();
+            if (harvestable)
+            {
+                Destroy(planted_crop.gameObject);
+            }
+            return harvestable;
+        }
+
+        return false;
+    }
+
+
 }
