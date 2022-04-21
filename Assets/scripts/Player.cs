@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     private Inventory inventory = new Inventory();
     public Image[] item_slots = new Image[8];
     public Image[] item_slots_background = new Image[8];
+    private Planter current_planter;
 
   
     // Start is called before the first frame update
@@ -25,6 +26,9 @@ public class Player : MonoBehaviour
         {
             inventory.inventory_panel[i] = inventory.seed_list[i];
         }
+        inventory.selected_crop = 0;
+        held_seed = inventory.seed_list[0];
+        ChangeSelection();
         UpdateUI();
     }
 
@@ -51,12 +55,26 @@ public class Player : MonoBehaviour
                 if (hit.transform.name == "Plane") 
                 {
                     GetComponent<NavMeshAgent>().SetDestination(hit.point);
+                    marker.SetActive(true);
                     marker.transform.position = hit.point;
                 }
             
             }
         
         
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && current_planter != null && held_seed != null) 
+        {
+            if (current_planter.HarvestCrop())
+            {
+                inventory.money += 10;
+            }
+            else
+            {
+                current_planter.PlantCrop(held_seed.crop);
+            }
+
         }
 
         Vector3 look_direction = transform.forward;
@@ -85,10 +103,14 @@ public class Player : MonoBehaviour
         if (Input.GetAxis("Vertical") != 0)
         {
             transform.Translate(Vector3.forward* Input.GetAxis("Vertical") * Time.deltaTime * move_speed, Space.World);
+            GetComponent<NavMeshAgent>().ResetPath();
+            marker.SetActive(false);
         }
         if (Input.GetAxis("Horizontal") != 0)
         {
             transform.Translate(Vector3.right * Input.GetAxis("Horizontal") * Time.deltaTime * move_speed, Space.World);
+            GetComponent<NavMeshAgent>().ResetPath();
+            marker.SetActive(false);
         }
 
         if (Input.GetAxis("Mouse ScrollWheel") > 0)
@@ -96,6 +118,7 @@ public class Player : MonoBehaviour
             if (camera_offset.y > 3)
             {
                 camera_offset.y -= Input.GetAxis("Mouse ScrollWheel");
+                camera_offset.z += Input.GetAxis("Mouse ScrollWheel") * 0.5f;
             }
         }
 
@@ -104,6 +127,7 @@ public class Player : MonoBehaviour
             if (camera_offset.y < 15)
             {
                 camera_offset.y -= Input.GetAxis("Mouse ScrollWheel");
+                camera_offset.z += Input.GetAxis("Mouse ScrollWheel") * 0.5f;
             }
         }
         Camera.main.transform.position = transform.position + camera_offset;
@@ -194,23 +218,24 @@ public class Player : MonoBehaviour
         }
         item_slots_background[inventory.selected_crop].GetComponent<Image>().color = Color.yellow;    
     }
-    private void OnCollisionStay(Collision collision)
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            Planter p = collision.gameObject.GetComponent<Planter>();
-            if ( p != null ) 
-            {
-                if (p.HarvestCrop())
-                {
-                    inventory.money += 10;
-                }
-                else
-                {
-                    p.PlantCrop(held_seed.crop);
-                }
-            } 
-        }
 
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Planter p = other.gameObject.GetComponent<Planter>();
+        if (p != null && current_planter != p) 
+        {
+            current_planter = p;
+        }
+        
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        Planter p = other.gameObject.GetComponent<Planter>();
+        if (p != null && current_planter == p) 
+        {
+            current_planter = null;
+        }
     }
 }

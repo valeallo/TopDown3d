@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class DayNightCycle : MonoBehaviour
 {
-    private float day_length = 12f;
+    private float day_length = 3f;
     private float current_time = 0;
     public Text time_text;
     // Start is called before the first frame update
