@@ -15,6 +15,9 @@ public class Player : MonoBehaviour
     public Image[] item_slots = new Image[8];
     public Image[] item_slots_background = new Image[8];
     private Planter current_planter;
+    public Text money_text;
+    public GameObject planter_prefab;
+    private bool placing_planter = false;
 
   
     // Start is called before the first frame update
@@ -41,6 +44,7 @@ public class Player : MonoBehaviour
                 item_slots[i].sprite = inventory.inventory_panel[i].crop.sprite;
             }
         }
+        money_text.text = inventory.money.ToString();
     }
 
     // Update is called once per frame
@@ -48,20 +52,25 @@ public class Player : MonoBehaviour
     {
         if (Input.GetMouseButton(0)) 
         {
+           
             Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(mouseRay, out hit)) 
             {
                 if (hit.transform.name == "Plane") 
                 {
-                    GetComponent<NavMeshAgent>().SetDestination(hit.point);
-                    marker.SetActive(true);
-                    marker.transform.position = hit.point;
+                    if (placing_planter) 
+                    {
+                        PlacePlanter(hit.point);
+                    }
+                    //else 
+                    //{ 
+                    //GetComponent<NavMeshAgent>().SetDestination(hit.point);
+                    //marker.SetActive(true);
+                    //marker.transform.position = hit.point;
+                    //}
                 }
-            
             }
-        
-        
         }
 
         if (Input.GetKeyDown(KeyCode.Space) && current_planter != null && held_seed != null) 
@@ -69,6 +78,7 @@ public class Player : MonoBehaviour
             if (current_planter.HarvestCrop())
             {
                 inventory.money += 10;
+                UpdateUI();
             }
             else
             {
@@ -237,5 +247,33 @@ public class Player : MonoBehaviour
         {
             current_planter = null;
         }
+    }
+
+
+    private void PlacePlanter(Vector3 position) 
+    {
+        if (inventory.money >= 20)
+        { 
+            var overlaps = Physics.OverlapBox(position, new Vector3(0.5f, 0.5f, 0.5f), Quaternion.identity, ~6);
+            Debug.Log(overlaps.Length);
+            if (overlaps.Length > 0)
+            {
+                Vector3 offset = position - overlaps[0].transform.position;
+                offset.y = 0;
+                position += offset;
+                Debug.Log(offset);
+            
+            }
+            Instantiate(planter_prefab, position, Quaternion.identity);
+            inventory.money -= 20;
+            UpdateUI();
+        }
+
+    }
+
+
+    public void TogglePlacement() 
+    {
+        placing_planter = !placing_planter; 
     }
 }
