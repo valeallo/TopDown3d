@@ -113,13 +113,13 @@ public class Player : MonoBehaviour
         if (Input.GetAxis("Vertical") != 0)
         {
             transform.Translate(Vector3.forward* Input.GetAxis("Vertical") * Time.deltaTime * move_speed, Space.World);
-            GetComponent<NavMeshAgent>().ResetPath();
+            //GetComponent<NavMeshAgent>().ResetPath();
             marker.SetActive(false);
         }
         if (Input.GetAxis("Horizontal") != 0)
         {
             transform.Translate(Vector3.right * Input.GetAxis("Horizontal") * Time.deltaTime * move_speed, Space.World);
-            GetComponent<NavMeshAgent>().ResetPath();
+            //GetComponent<NavMeshAgent>().ResetPath();
             marker.SetActive(false);
         }
 
@@ -255,14 +255,11 @@ public class Player : MonoBehaviour
         if (inventory.money >= 20)
         { 
             var overlaps = Physics.OverlapBox(position, new Vector3(0.5f, 0.5f, 0.5f), Quaternion.identity, ~6);
-            Debug.Log(overlaps.Length);
             if (overlaps.Length > 0)
             {
                 Vector3 offset = position - overlaps[0].transform.position;
                 offset.y = 0;
                 position += offset;
-                Debug.Log(offset);
-            
             }
             Instantiate(planter_prefab, position, Quaternion.identity);
             inventory.money -= 20;
