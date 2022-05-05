@@ -6,12 +6,13 @@ public class LevelGen : MonoBehaviour
 {
     public GameObject player;
     public GameObject tile_prefab;
-    private float tile_width = 1f;
+    [SerializeField]private float tile_width;
     private List<Tile> tiles = new List<Tile>();
     private int radius = 10;
     // Start is called before the first frame update
     void Start()
     {
+        GenerateLevel();
         
     }
 
@@ -33,7 +34,7 @@ public class LevelGen : MonoBehaviour
         {
             for (int x = -radius; x < radius; x++)
             {
-
+                Instantiate(tile_prefab, start + new Vector3(x, 0, y) * tile_width, Quaternion.identity);
             }
 
         }
