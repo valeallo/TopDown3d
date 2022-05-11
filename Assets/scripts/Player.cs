@@ -19,10 +19,16 @@ public class Player : MonoBehaviour
     public GameObject planter_prefab;
     private bool placing_planter = false;
 
+    public bool GetPlacement() 
+    {
+        return placing_planter;
+    }
+
   
     // Start is called before the first frame update
     void Start()
     {
+        ServiceLocator.SetPlayer(this);
         camera_offset = Camera.main.transform.position - transform.position;
         inventory.seed_list = ServiceLocator.GetGameManager().all_seeds;
         for (int i = 0; i < 8 && i < inventory.seed_list.Count; i++)
@@ -59,10 +65,10 @@ public class Player : MonoBehaviour
             {
                 if (hit.transform.name == "Plane") 
                 {
-                    if (placing_planter) 
-                    {
-                        PlacePlanter(hit.point);
-                    }
+                    //if (placing_planter) 
+                   // {
+                    //    PlacePlanter(hit.point);
+                   // }
                     //else 
                     //{ 
                     //GetComponent<NavMeshAgent>().SetDestination(hit.point);
@@ -268,9 +274,19 @@ public class Player : MonoBehaviour
 
     }
 
+    public int SpendMoney(int money) 
+    {
+        inventory.money -= money;
+        UpdateUI();
+        return inventory.money;
+    }
+
 
     public void TogglePlacement() 
     {
-        placing_planter = !placing_planter; 
+        if (inventory.money >= 20 || placing_planter)
+        {
+            placing_planter = !placing_planter;
+        }
     }
 }

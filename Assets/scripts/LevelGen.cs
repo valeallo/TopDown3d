@@ -9,10 +9,11 @@ public class LevelGen : MonoBehaviour
     [SerializeField]private float tile_width;
     private List<Tile> tiles = new List<Tile>();
     private int radius = 10;
+    private Vector3 previous_spawn_position = new Vector3(); 
     // Start is called before the first frame update
     void Start()
     {
-        
+        previous_spawn_position = player.transform.position + new Vector3(1000, 1000, 1000);
     }
 
     // Update is called once per frame
@@ -23,7 +24,12 @@ public class LevelGen : MonoBehaviour
 
     private void FixedUpdate()
     {
-        GenerateLevel();
+        if (Vector3.Distance(player.transform.position, previous_spawn_position)> tile_width * 5)
+        {
+            GenerateLevel();
+            previous_spawn_position = player.transform.position;
+        }
+
     }
 
     private void GenerateLevel() 

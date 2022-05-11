@@ -14,6 +14,6 @@ public class Inventory
         seed_list = new List<Seed>();
         inventory_panel = new Seed[8];
         selected_crop = 0;
-        money = 20;
+        money = 220;
     }
 }
