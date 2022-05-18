@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     public Text money_text;
     public GameObject planter_prefab;
     private bool placing_planter = false;
+    public InventoryItem held_item;
 
     public bool GetPlacement() 
     {
@@ -223,6 +224,14 @@ public class Player : MonoBehaviour
             inventory.selected_crop = crop_id;
             held_seed = inventory.seed_list[crop_id];
             ChangeSelection();
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (held_item != null)
+        {
+            held_item.GetComponent<RectTransform>().anchoredPosition = Input.mousePosition;
         }
     }
 
