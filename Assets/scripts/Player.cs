@@ -231,7 +231,7 @@ public class Player : MonoBehaviour
     {
         if (held_item != null)
         {
-            held_item.GetComponent<RectTransform>().anchoredPosition = Input.mousePosition;
+            held_item.GetComponent<RectTransform>().anchoredPosition = Input.mousePosition - new Vector3(Screen.width, Screen.height, 0)/2;
         }
     }
 

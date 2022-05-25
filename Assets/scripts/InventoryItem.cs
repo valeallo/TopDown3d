@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 public class InventoryItem : MonoBehaviour, IPointerDownHandler
 { 
     private ItemSlot slot;
+    public ItemSlot GetSlot() { return slot;  }
     public void OnPointerDown(PointerEventData eventData)
     {
         ServiceLocator.GetPlayer().held_item = this;
@@ -21,7 +22,7 @@ public class InventoryItem : MonoBehaviour, IPointerDownHandler
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (ServiceLocator.GetPlayer().held_item == this)
         {
@@ -29,12 +30,15 @@ public class InventoryItem : MonoBehaviour, IPointerDownHandler
             {
                 transform.SetParent(slot.transform);
                 transform.localPosition = new Vector3();
+                ServiceLocator.GetPlayer().held_item = null;
+                Debug.Log("inventory item");
             }
         }
         
     }
     public void SetSlot(ItemSlot slot) 
     {
-        this.slot = slot;      
+        this.slot = slot;
+        slot.SetItem(this);
     }
 }
