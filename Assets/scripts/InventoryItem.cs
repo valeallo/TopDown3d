@@ -18,6 +18,7 @@ public class InventoryItem : MonoBehaviour, IPointerDownHandler
     void Start()
     {
         slot = transform.parent.GetComponent<ItemSlot>();
+        slot.SetItem(this);
         
     }
 
@@ -28,6 +29,7 @@ public class InventoryItem : MonoBehaviour, IPointerDownHandler
         {
             if (!Input.GetMouseButton(0))
             {
+                Debug.Log("Slot Tansform:" + slot.transform.position);
                 transform.SetParent(slot.transform);
                 transform.localPosition = new Vector3();
                 ServiceLocator.GetPlayer().held_item = null;
