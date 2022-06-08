@@ -11,7 +11,7 @@ public class Inventory
 
     public Inventory() 
     {
-        seed_list = new List<Seed>();
+        seed_list = new List<Seed>(8);
         inventory_panel = new Seed[8];
         selected_crop = 0;
         money = 220;

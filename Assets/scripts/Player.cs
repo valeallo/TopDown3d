@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
     {
         for (int i = 0; i < 8; i++) 
         {
-            if (inventory.inventory_panel[i] != null)
+            if (inventory.inventory_panel[i] != null && inventory.inventory_panel[i].crop != null)
             {
                 item_slots[i].sprite = inventory.inventory_panel[i].crop.sprite;
             }
@@ -163,7 +163,7 @@ public class Player : MonoBehaviour
             crop_id = inventory.selected_crop - 1;
             if (crop_id < 0) 
             {
-                crop_id = Mathf.Min(inventory.seed_list.Count - 1, 7);
+                crop_id = 7;
             }
       
         }
@@ -172,7 +172,7 @@ public class Player : MonoBehaviour
         {
             select_item = true;
             crop_id = inventory.selected_crop + 1;
-            if (crop_id > inventory.seed_list.Count - 1 || crop_id > 7)
+            if (crop_id > 7)
             {
                 crop_id = 0;
             }
@@ -222,7 +222,7 @@ public class Player : MonoBehaviour
         if (select_item) 
         {
             inventory.selected_crop = crop_id;
-            held_seed = inventory.seed_list[crop_id];
+            held_seed = inventory.inventory_panel[crop_id];
             ChangeSelection();
         }
     }
@@ -297,5 +297,13 @@ public class Player : MonoBehaviour
         {
             placing_planter = !placing_planter;
         }
+    }
+
+    public void MoveItem(int previous_index, int new_index)
+    {
+        Seed item_1 = inventory.inventory_panel[previous_index];
+        Seed item_2 = inventory.inventory_panel[new_index];
+        inventory.inventory_panel[previous_index] = item_2;
+        inventory.inventory_panel[new_index] = item_1;
     }
 }

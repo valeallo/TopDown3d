@@ -42,5 +42,9 @@ public class InventoryItem : MonoBehaviour, IPointerDownHandler
     {
         this.slot = slot;
         slot.SetItem(this);
+        transform.SetParent(slot.transform);
+        transform.localPosition = new Vector3();
+
+        
     }
 }
