@@ -9,8 +9,11 @@ public class InventoryItem : MonoBehaviour, IPointerDownHandler
     public ItemSlot GetSlot() { return slot;  }
     public void OnPointerDown(PointerEventData eventData)
     {
-        ServiceLocator.GetPlayer().held_item = this;
-        transform.SetParent(transform.parent.parent.parent);
+        if (ServiceLocator.GetPlayer().CheckItemInSlot(slot.transform.GetSiblingIndex())) 
+        {
+            ServiceLocator.GetPlayer().held_item = this;
+            transform.SetParent(transform.parent.parent.parent);
+        }
     }
 
 
@@ -29,11 +32,9 @@ public class InventoryItem : MonoBehaviour, IPointerDownHandler
         {
             if (!Input.GetMouseButton(0))
             {
-                Debug.Log("Slot Tansform:" + slot.transform.position);
                 transform.SetParent(slot.transform);
                 transform.localPosition = new Vector3();
                 ServiceLocator.GetPlayer().held_item = null;
-                Debug.Log("inventory item");
             }
         }
         

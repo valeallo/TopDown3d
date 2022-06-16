@@ -46,7 +46,11 @@ public class Player : MonoBehaviour
     {
         for (int i = 0; i < 8; i++) 
         {
-            if (inventory.inventory_panel[i] != null && inventory.inventory_panel[i].crop != null)
+            if (inventory.inventory_panel[i] == null)
+            {
+                item_slots[i].sprite = null;
+            }
+            else 
             {
                 item_slots[i].sprite = inventory.inventory_panel[i].crop.sprite;
             }
@@ -305,5 +309,16 @@ public class Player : MonoBehaviour
         Seed item_2 = inventory.inventory_panel[new_index];
         inventory.inventory_panel[previous_index] = item_2;
         inventory.inventory_panel[new_index] = item_1;
+    }
+
+    public bool CheckItemInSlot(int slot_index) 
+    {
+        if (inventory.inventory_panel[slot_index] != null)
+        {
+            return true;
+        }
+
+        return false;
+    
     }
 }
