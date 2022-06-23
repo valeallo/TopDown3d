@@ -8,6 +8,13 @@ public class Tile : MonoBehaviour
 {
     public Vector2Int grid_position;
     public Planter planter_prefab;
+    private Tile parent = null;
+    public bool walkable = true;
+    public float f_cost { get { return h_cost + g_cost; } }
+    public float h_cost;
+    public float g_cost = Mathf.Infinity;
+    public Tile GetParent() { return parent; }
+    public void SetParent(Tile p)  {parent = p;}
     // Start is called before the first frame update
     void Start()
     {
