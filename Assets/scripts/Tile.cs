@@ -13,6 +13,7 @@ public class Tile : MonoBehaviour
     public float f_cost { get { return h_cost + g_cost; } }
     public float h_cost;
     public float g_cost = Mathf.Infinity;
+    public List<Tile> neighbours = new List<Tile>();
     public Tile GetParent() { return parent; }
     public void SetParent(Tile p)  {parent = p;}
     // Start is called before the first frame update

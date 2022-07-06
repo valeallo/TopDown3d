@@ -21,7 +21,9 @@ public class PathFinding : MonoBehaviour
 
     public void FindPath(Tile start, Tile end) 
     {
+
         open.Add(start);
+        start.g_cost = 0;
         while (open.Count > 0)
         {
             Tile current = open[0];
@@ -36,12 +38,42 @@ public class PathFinding : MonoBehaviour
             closed.Add(current);
             if (current == end)
             {
-                //BuildPath() 
+                BuildPath(start, end);
                 open.Clear();
                 closed.Clear();
                 return;
             }
+            foreach (var n in current.neighbours)
+            {
+                if (closed.Contains(n) || !n.walkable)
+                {
+                    continue;
+                }
+                float move_cost = current.g_cost + Vector2.Distance(current.grid_position, n.grid_position);
+                if (move_cost <  n.g_cost) 
+                {
+                    n.g_cost = move_cost;
+                    n.h_cost = Vector2.Distance(n.grid_position, end.grid_position);
+                    n.SetParent(current);
+                    if (!open.Contains(n)) 
+                    {
+                        open.Add(n);
+                    }
+                }
+            }
         }
-
+        open.Clear();
+        closed.Clear();
+        Debug.Log("no path found");
+    }
+    private void BuildPath(Tile start, Tile end) 
+    {
+        Tile current = end;
+        while (current != start) 
+        {
+            path.Add(current);
+            current = current.GetParent();
+        }
+        path.Reverse();
     }
 }
