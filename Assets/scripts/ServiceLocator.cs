@@ -14,5 +14,9 @@ public static class ServiceLocator
     public static void SetPlayer(Player PL) { player = PL; }
     public static Player GetPlayer() { return player; }
 
+    private static LevelGen lg;
+    public static void SetLevelGen(LevelGen LG) {lg = LG; }
+    public static LevelGen GetLevelGen() { return lg; }
+
 
 }

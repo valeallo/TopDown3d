@@ -9,17 +9,27 @@ public class LevelGen : MonoBehaviour
     [SerializeField]private float tile_width;
     private List<Tile> tiles = new List<Tile>();
     private int radius = 10;
-    private Vector3 previous_spawn_position = new Vector3(); 
+    private Vector3 previous_spawn_position = new Vector3();
+    private void Awake()
+    {
+        ServiceLocator.SetLevelGen(this);
+        GenerateLevel();
+        previous_spawn_position = player.transform.position;
+    }
     // Start is called before the first frame update
     void Start()
     {
-        previous_spawn_position = player.transform.position + new Vector3(1000, 1000, 1000);
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public List<Tile> GetTiles()
+    {
+        return tiles;
     }
 
     private void FixedUpdate()
@@ -38,6 +48,7 @@ public class LevelGen : MonoBehaviour
         start_position /= tile_width;
         start_position = new Vector3(Mathf.RoundToInt(start_position.x), 0, Mathf.RoundToInt(start_position.z));
         start_position *= tile_width;
+        List<Tile> new_tiles = new List<Tile>();
         for (int y = 0; y < radius * 2; y++) 
         {
             for (int x = 0; x < radius * 2; x++)
@@ -46,10 +57,49 @@ public class LevelGen : MonoBehaviour
                 var overlaps = Physics.OverlapBox(position, new Vector3(0.5f, 0.025f, 0.5f), Quaternion.identity, ~7);
                 if (overlaps.Length == 0)
                 {
-                    Instantiate(tile_prefab, position, Quaternion.identity);
+                    Tile new_tile = Instantiate(tile_prefab, position, Quaternion.identity).GetComponent<Tile>();
+                    tiles.Add(new_tile);
+                    new_tiles.Add(new_tile);
+                    new_tile.grid_position = new Vector2Int((int)position.x, (int)position.z);
+                   
                 }
             }
 
         }
+        foreach(var t in new_tiles)
+        {
+           
+            for (int y = -1; y < 2; y++)
+            {
+                for(int x = -1; x < 2; x++)
+                {
+                    if (x == 0 && y == 0)
+                    {
+                        continue;
+                    }
+                    Tile neighbour;
+                    if (FindTile(t.grid_position + new Vector2Int(x, y), out neighbour))
+                    {
+                        t.neighbours.Add(neighbour);
+                        neighbour.neighbours.Add(t);
+                        Debug.Log("neighbour added");
+                    }
+                }
+            }
+        }
+    }
+
+    public bool FindTile(Vector2Int grid_position, out Tile tile)
+    {
+        tile = null;
+        foreach (var t in tiles)
+        {
+            if (t.grid_position == grid_position)
+            {
+                tile = t;
+                return true;
+            }
+        }
+        return false;
     }
 }

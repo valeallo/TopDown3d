@@ -18,7 +18,32 @@ public class PathFinding : MonoBehaviour
     {
         
     }
+    public void FindPath(Vector3 start, Vector3 end)
+    {
+        Tile start_tile, end_tile;
+        List<Tile> tiles = ServiceLocator.GetLevelGen().GetTiles();
+        start_tile = tiles[0];
+        end_tile = tiles[0];
+        float start_distance = Vector3.Distance(start, start_tile.transform.position);
+        float end_distance = Vector3.Distance(end, end_tile.transform.position);
+        for ( int i = 1; i < tiles.Count; i++)
+        {
+            float s_dist = Vector3.Distance(tiles[i].transform.position, start);
+            if (s_dist < start_distance)
+            {
+                start_distance = s_dist;
+                start_tile = tiles[i];
+            }
+            float e_dist = Vector3.Distance(tiles[i].transform.position, end);
+            if (s_dist < end_distance)
+            {
+                end_distance = e_dist;
+                start_tile = tiles[i];
+            }
 
+        }
+        FindPath(start_tile, end_tile);
+    }
     public void FindPath(Tile start, Tile end) 
     {
 
@@ -75,5 +100,10 @@ public class PathFinding : MonoBehaviour
             current = current.GetParent();
         }
         path.Reverse();
+    }
+
+    public List<Tile> GetPath() 
+    {
+        return path; 
     }
 }
