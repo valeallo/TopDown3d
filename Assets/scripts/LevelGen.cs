@@ -10,6 +10,7 @@ public class LevelGen : MonoBehaviour
     private List<Tile> tiles = new List<Tile>();
     private int radius = 10;
     private Vector3 previous_spawn_position = new Vector3();
+    public GameObject rock_prefab;
     private void Awake()
     {
         ServiceLocator.SetLevelGen(this);
@@ -57,10 +58,17 @@ public class LevelGen : MonoBehaviour
                 var overlaps = Physics.OverlapBox(position, new Vector3(0.5f, 0.025f, 0.5f), Quaternion.identity, ~7);
                 if (overlaps.Length == 0)
                 {
-                    Tile new_tile = Instantiate(tile_prefab, position, Quaternion.identity).GetComponent<Tile>();
+                    GameObject chosen_prefab = tile_prefab;
+                    if (Random.Range(0, 100) < 5) 
+                    {
+                        chosen_prefab = rock_prefab;
+                    }
+                    Tile new_tile = Instantiate(chosen_prefab, position, Quaternion.identity).GetComponent<Tile>();
                     tiles.Add(new_tile);
                     new_tiles.Add(new_tile);
+                    position /= 2f;
                     new_tile.grid_position = new Vector2Int((int)position.x, (int)position.z);
+                    new_tile.name = new_tile.grid_position.ToString();
                    
                 }
             }
@@ -97,9 +105,18 @@ public class LevelGen : MonoBehaviour
             if (t.grid_position == grid_position)
             {
                 tile = t;
+                Debug.Log("tile found");
                 return true;
             }
         }
         return false;
+    }
+
+    public void ResetCost()
+    {
+        foreach (var t in tiles) 
+        {
+            t.g_cost = Mathf.Infinity;
+        }
     }
 }

@@ -537,6 +537,7 @@ MonoBehaviour:
   player: {fileID: 124414585}
   tile_prefab: {fileID: 7761394326327058073, guid: 8debdedb632d7d44c8e4dcb7274bb7e3, type: 3}
   tile_width: 2
+  rock_prefab: {fileID: 6374142603651641993, guid: dbb959138d721534a96f90bf34d8efab, type: 3}
 --- !u!1 &332878615
 GameObject:
   m_ObjectHideFlags: 0
@@ -2822,7 +2823,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 0f0447f00d58d6e48a58b9524caf1d86, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

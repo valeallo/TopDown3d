@@ -46,7 +46,8 @@ public class PathFinding : MonoBehaviour
     }
     public void FindPath(Tile start, Tile end) 
     {
-
+        path.Clear();
+        ServiceLocator.GetLevelGen().ResetCost();
         open.Add(start);
         start.g_cost = 0;
         while (open.Count > 0)
