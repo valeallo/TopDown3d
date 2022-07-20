@@ -8,7 +8,8 @@ public class Animal : MonoBehaviour
     protected float move_speed = 4;
     protected float hunger;
     protected float max_hunger;
-    protected Vector3 destination; 
+    protected Vector3 destination;
+    List<Tile> previous_path = new List<Tile>();
     // Start is called before the first frame update
     void Start()
     {
@@ -27,9 +28,9 @@ public class Animal : MonoBehaviour
             return;
         }
        
-        if (transform.position != destination && pathFinding.GetPath().Count > 0)
+        if (transform.position != destination && pathFinding.GetPath().Count > 0 && pathFinding.path_ready)
         {
-           if (Vector3.Distance(transform.position, pathFinding.GetPath()[0].transform.position) < 0.5f) 
+           if (transform.position == pathFinding.GetPath()[0].transform.position) 
             {
                 pathFinding.GetPath().RemoveAt(0); 
             }
@@ -49,7 +50,7 @@ public class Animal : MonoBehaviour
     {
         
         Vector2 direction = Random.insideUnitCircle.normalized;
-        Vector3 d =  transform.position + new Vector3(direction.x, 0, direction.y) * Random.Range(5, 20);
+        Vector3 d =  transform.position + new Vector3(direction.x, 0, direction.y) * Random.Range(5, 10);
         MoveTo(d);
         
         
@@ -59,5 +60,14 @@ public class Animal : MonoBehaviour
     {
         pathFinding.FindPath(transform.position, position);
         destination = position;
+        foreach (var t in previous_path)
+        {
+            t.GetComponent<MeshRenderer>().material.color = Color.white;
+        }
+        foreach(var t in pathFinding.GetPath())
+        {
+            t.GetComponent<MeshRenderer>().material.color = Color.green;
+        }
+        previous_path = pathFinding.GetPath();
     }
 }

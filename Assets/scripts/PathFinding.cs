@@ -7,6 +7,7 @@ public class PathFinding : MonoBehaviour
     private List<Tile> open = new List<Tile>();
     private List<Tile> closed = new List<Tile>();
     private List<Tile> path = new List<Tile>();
+    public bool path_ready = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -46,6 +47,7 @@ public class PathFinding : MonoBehaviour
     }
     public void FindPath(Tile start, Tile end) 
     {
+        path_ready = false;
         path.Clear();
         ServiceLocator.GetLevelGen().ResetCost();
         open.Add(start);
@@ -100,7 +102,9 @@ public class PathFinding : MonoBehaviour
             path.Add(current);
             current = current.GetParent();
         }
+        Debug.Log("reversed path");
         path.Reverse();
+        path_ready = true;
     }
 
     public List<Tile> GetPath() 

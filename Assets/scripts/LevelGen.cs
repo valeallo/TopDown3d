@@ -20,6 +20,7 @@ public class LevelGen : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        GenerateLevel();
     }
 
     // Update is called once per frame
@@ -37,7 +38,7 @@ public class LevelGen : MonoBehaviour
     {
         if (Vector3.Distance(player.transform.position, previous_spawn_position)> tile_width * 5)
         {
-            GenerateLevel();
+            //GenerateLevel();
             previous_spawn_position = player.transform.position;
         }
 
@@ -66,7 +67,7 @@ public class LevelGen : MonoBehaviour
                     Tile new_tile = Instantiate(chosen_prefab, position, Quaternion.identity).GetComponent<Tile>();
                     tiles.Add(new_tile);
                     new_tiles.Add(new_tile);
-                    position /= 2f;
+                    position /= tile_width;
                     new_tile.grid_position = new Vector2Int((int)position.x, (int)position.z);
                     new_tile.name = new_tile.grid_position.ToString();
                    
@@ -74,6 +75,8 @@ public class LevelGen : MonoBehaviour
             }
 
         }
+        Debug.Log("there are this number of tiles: " + tiles.Count);
+
         foreach(var t in new_tiles)
         {
            
@@ -88,12 +91,18 @@ public class LevelGen : MonoBehaviour
                     Tile neighbour;
                     if (FindTile(t.grid_position + new Vector2Int(x, y), out neighbour))
                     {
-                        t.neighbours.Add(neighbour);
-                        neighbour.neighbours.Add(t);
-                        Debug.Log("neighbour added");
+                        if (!t.neighbours.Contains(neighbour))
+                        {
+                            t.neighbours.Add(neighbour);
+                        }
+                        if (!neighbour.neighbours.Contains(t)) 
+                        {
+                            neighbour.neighbours.Add(t);
+                        } 
                     }
                 }
             }
+            Debug.Log(t.neighbours.Count);
         }
     }
 
