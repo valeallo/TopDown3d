@@ -56,7 +56,8 @@ public class Animal : MonoBehaviour
             }
             else if (!moving_to_food)
             {
-                if (SearchFood()) 
+
+                if (!SearchFood()) 
                 {
                     Wander();
                 }
@@ -136,6 +137,7 @@ public class Animal : MonoBehaviour
             }
             chosen_planter = closest;
             pathFinding.FindPath(transform.position, closest.transform.position);
+            destination = chosen_planter.transform.position;
             moving_to_food = true;
             return true;
         }
