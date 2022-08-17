@@ -36,10 +36,10 @@ public class PathFinding : MonoBehaviour
                 start_tile = tiles[i];
             }
             float e_dist = Vector3.Distance(tiles[i].transform.position, end);
-            if (s_dist < end_distance)
+            if (e_dist < end_distance)
             {
                 end_distance = e_dist;
-                start_tile = tiles[i];
+                end_tile = tiles[i];
             }
 
         }
@@ -92,7 +92,7 @@ public class PathFinding : MonoBehaviour
         }
         open.Clear();
         closed.Clear();
-        Debug.Log("no path found");
+       
     }
     private void BuildPath(Tile start, Tile end) 
     {
@@ -102,7 +102,7 @@ public class PathFinding : MonoBehaviour
             path.Add(current);
             current = current.GetParent();
         }
-        Debug.Log("reversed path");
+        
         path.Reverse();
         path_ready = true;
     }

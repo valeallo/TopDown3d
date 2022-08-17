@@ -52,5 +52,8 @@ public class Planter : MonoBehaviour
         return false;
     }
 
-
+    public bool IsCropPlanted()
+    {
+        return planted_crop == null ? false: planted_crop.CheckHarvestability();
+    }
 }

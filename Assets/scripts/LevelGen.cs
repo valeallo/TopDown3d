@@ -20,7 +20,7 @@ public class LevelGen : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GenerateLevel();
+        
     }
 
     // Update is called once per frame
@@ -38,7 +38,7 @@ public class LevelGen : MonoBehaviour
     {
         if (Vector3.Distance(player.transform.position, previous_spawn_position)> tile_width * 5)
         {
-            //GenerateLevel();
+            GenerateLevel();
             previous_spawn_position = player.transform.position;
         }
 
@@ -75,7 +75,7 @@ public class LevelGen : MonoBehaviour
             }
 
         }
-        Debug.Log("there are this number of tiles: " + tiles.Count);
+       
 
         foreach(var t in new_tiles)
         {
@@ -102,7 +102,7 @@ public class LevelGen : MonoBehaviour
                     }
                 }
             }
-            Debug.Log(t.neighbours.Count);
+            
         }
     }
 
@@ -114,7 +114,7 @@ public class LevelGen : MonoBehaviour
             if (t.grid_position == grid_position)
             {
                 tile = t;
-                Debug.Log("tile found");
+                
                 return true;
             }
         }
